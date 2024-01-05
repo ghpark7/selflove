@@ -3,6 +3,23 @@ import { mysqlConnection } from "../mysql.conn.js";
 
 const router = express.Router();
 
+// 일기 추가
+router.post("/", async (req, res) => {
+  const { title, content } = req.body;
+
+  const userId = 1;
+  const insertDiaryQuery =
+    "INSERT INTO Diary (title, content, uid, createdAt) VALUES (?, ?, ?, NOW())";
+  const values = [title, content, userId];
+
+  try {
+    await mysqlConnection.connection.execute(insertDiaryQuery, values);
+    res.status(201).json({ message: "일기 저장 성공" });
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 // 일기 조회
 router.get("/my", async (req, res) => {
   const uid = 1; // TODO: 세션 정보를 바탕으로 얻어내도록 변경 필요
@@ -34,23 +51,6 @@ router.get("/:did", async (req, res) => {
       values
     );
     res.json(result);
-  } catch (error) {
-    res.send(error);
-  }
-});
-
-// 일기 추가
-router.post("/", async (req, res) => {
-  const { title, content } = req.body;
-
-  const userId = 1;
-  const insertDiaryQuery =
-    "INSERT INTO Diary (title, content, uid, createdAt) VALUES (?, ?, ?, NOW())";
-  const values = [title, content, userId];
-
-  try {
-    await mysqlConnection.connection.execute(insertDiaryQuery, values);
-    res.status(201).json({ message: "일기 저장 성공" });
   } catch (error) {
     res.send(error);
   }
