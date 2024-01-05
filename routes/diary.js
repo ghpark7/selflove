@@ -4,8 +4,8 @@ import { mysqlConnection } from "../mysql.conn.js";
 const router = express.Router();
 
 // 일기 조회
-router.get("/user/:uid", async (req, res) => {
-  const { uid } = req.params;
+router.get("/my", async (req, res) => {
+  const uid = 1; // TODO: 세션 정보를 바탕으로 얻어내도록 변경 필요
 
   const selectDiariesQuery =
     "SELECT * FROM Diary WHERE uid = ? ORDER BY createdAt DESC";
