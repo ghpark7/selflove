@@ -7,12 +7,34 @@ var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 
 /*
- author: ghpark
+ author: ghpark ------------------------------------------------------------------
  passport 동작을 위해 추가
 */
 var passport = require('passport')
     , LocalStrategy = require('passport-local')
     .Strategy;
+
+passport.use(new LocalStrategy({
+        usernameField: 'uid',
+        passwordField: 'pwd',
+    },
+    function (username, password, done) {
+        User.findOne({ username: username }, function (err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (!user.verifyPassword(password)) { return done(null, false); }
+            return done(null, user);
+          });
+        }
+));
+
+app.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login'
+    }));
+
+// --------- 여기까지 손댐 --------------------------------------------
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
