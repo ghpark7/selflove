@@ -1,11 +1,11 @@
-const {
+import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-} = require("typeorm");
-const User = require("./User.entity");
+} from "typeorm";
+import User from "./User.entity";
 
 @Entity()
 class Checklist {
@@ -26,4 +26,4 @@ class Checklist {
   user;
 }
 
-module.exports = Checklist;
+export default Checklist;

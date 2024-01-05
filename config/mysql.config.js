@@ -1,13 +1,10 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config(); // .env 파일 로드
 
 export const MYSQL_CONFIG = {
-  type: "mysql",
   host: process.env.DB_HOST,
-  username: process.env.DB_USER,
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
 };
