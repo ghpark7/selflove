@@ -22,7 +22,6 @@ const connection = mysql2.createConnection({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 // app.use(
 //   session({
 //     secret: "secret",
