@@ -23,13 +23,13 @@ const connection = mysql2.createConnection({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(
-  session({
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+// app.use(
+//   session({
+//     secret: "secret",
+//     resave: true,
+//     saveUninitialized: true,
+//   })
+// );
 app.use(cors());
 app.use("/diary", diaryRouter);
 app.use("/checklist", checklistRouter);
@@ -70,10 +70,7 @@ app.post("/login", (request, response) => {
         if (results.length > 0) {
           bcrypt.compare(password, results[0].password, function (err, res) {
             if (res) {
-              request.session.loggedin = true;
-              request.session.uid = results[0].uid;
-              request.session.email = email;
-              response.send("로그인이 완료되었습니다.");
+              response.send({ uid: results[0].uid, email });
             } else {
               response.send("잘못된 비밀번호입니다!");
             }
