@@ -24,8 +24,8 @@ router.post("/", async (req, res) => {
 // 일기 조회
 router.get("/my", async (req, res) => {
   // const uid = 1; // TODO: 세션 정보를 바탕으로 얻어내도록 변경 필요
-  console.log(req.session);
-  const uid = req.session.uid;
+  console.log(req.cookies["sessionId"]);
+  const uid = req.cookies["sessionId"].uid;
 
   const selectDiariesQuery =
     "SELECT * FROM Diary WHERE uid = ? ORDER BY createdAt DESC";
