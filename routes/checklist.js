@@ -3,11 +3,9 @@ import { mysqlConnection } from "../mysql.conn.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/:uid", async (req, res) => {
+  const { uid } = req.params;
   const { content } = req.body;
-
-  //   const uid = 1;
-  const uid = req.session.uid;
 
   const insertChecklistQuery =
     "INSERT INTO Checklist (isCompl, month, year, content, uid) VALUES (?, ?, ?, ?, ?)";
@@ -27,10 +25,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/score", async (req, res) => {
-  //   const uid = 1;
-  console.log(req.cookies["sessionId"]);
-  const uid = req.cookies["sessionId"].uid;
+router.get("/score/:uid", async (req, res) => {
+  const { uid } = req.params;
 
   const selectChecklistQuery =
     "SELECT * FROM Checklist WHERE uid = ? AND month = ? AND year = ?";
@@ -50,10 +46,8 @@ router.get("/score", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  //   const uid = 1;
-
-  const uid = req.session.uid;
+router.get("/:uid", async (req, res) => {
+  const { uid } = req.params;
 
   const selectChecklistQuery =
     "SELECT * FROM Checklist WHERE uid = ? AND month = ? AND year = ?";
@@ -100,15 +94,15 @@ router.patch("/:cid", async (req, res) => {
   }
 });
 
-router.delete("/:did", async (req, res) => {
-  const { did } = req.params;
+router.delete("/:cid", async (req, res) => {
+  const { cid } = req.params;
 
-  const deleteDiaryQuery = "DELETE FROM Diary WHERE did = ?";
-  const values = [did];
+  const deleteDiaryQuery = "DELETE FROM Checklist WHERE cid = ?";
+  const values = [cid];
 
   try {
     await mysqlConnection.connection.query(deleteDiaryQuery, values);
-    res.send({ message: "일기 삭제 성공" });
+    res.send({ message: "체크리스트 삭제 성공" });
   } catch (error) {
     res.send(error);
   }
