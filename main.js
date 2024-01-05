@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import mysql2 from "mysql2";
 import diaryRouter from "./routes/diary.js";
 import cors from "cors";
+import { mysqlConnection } from "./mysql.conn.js";
 
 const saltRounds = 10;
 
@@ -29,21 +30,35 @@ app.use(session({
   saveUninitialized: true
 }));
 app.use(cors());
-// app.use(express.json());
 app.use("/diary", diaryRouter);
 
+app.post('/register', async function(req, res) {
+  try {
+    console.log(1);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    console.log(2);
+    const user = { uid: req.body.uid, password: hashedPassword, nickname: req.body.nickname, email: req.body.email };
+    console.log(3);
+    await mysqlConnection.connection.execute('INSERT INTO User (nickname, email, password) VALUES (?, ?, ?)', [user.nickname, user.email, user.password]);
+    console.log(5);
+    res.send('성공했습니다!');
+  } catch (e){
+    console.log(e);
+  }
+});
+
 app.post('/login', (request, response) => {
-  console.log(request.body);
-  const uid = request.body.uid;
+  const email = request.body.email;
   const password = request.body.password;
 
-  if (uid && password) {
-      connection.query('SELECT * FROM accounts WHERE uid = ?', [uid], function(error, results, fields) {
+  if (email && password) {
+      connection.query('SELECT * FROM User WHERE email = ?', [email], function(error, results, fields) {
           if (results.length > 0) {
               bcrypt.compare(password, results[0].password, function(err, res) {
                   if(res) {
                       request.session.loggedin = true;
-                      request.session.uid = uid;
+                      request.session.uid = results[0].uid;
+                      request.session.email = email;
                       response.redirect('/');
                   } else {
                       response.send('잘못된 비밀번호입니다!');
@@ -64,7 +79,7 @@ app.post('/login', (request, response) => {
 
 app.get('/', function(request, response) {
   if (request.session.loggedin) {
-      response.send('환영합니다, ' + request.session.username + '님!');
+      response.send('환영합니다, ' + request.session.email + '님!');
   } else {
       response.send('로그인이 필요합니다!');
   }
