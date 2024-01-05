@@ -6,6 +6,11 @@ var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 
+
+var passport = require('passport')
+    , LocalStrategy = require('passport-local')
+    .Strategy;
+
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
