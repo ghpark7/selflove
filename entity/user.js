@@ -1,25 +1,16 @@
-const {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-} = require("typeorm");
-const Diary = require("./Diary.entity");
-const Checklist = require("./Checklist.entity");
-
 @Entity()
 class User {
   @PrimaryGeneratedColumn()
-  uid;
+  uid: int;
 
   @Column()
-  nickname;
+  nickname: string;
 
   @Column()
-  email;
+  email: string;
 
   @Column()
-  password;
+  password: string;
 
   @OneToMany(() => Diary, (diary) => diary.user)
   diaries;
@@ -28,4 +19,4 @@ class User {
   checklists;
 }
 
-module.exports = User;
+export default User;
