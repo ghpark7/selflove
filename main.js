@@ -10,8 +10,6 @@ import cors from "cors";
 import checklistRouter from "./routes/checklist.js";
 import { mysqlConnection } from "./mysql.conn.js";
 
-const saltRounds = 10;
-
 const app = express();
 
 // MySQL 연결을 위한 설정
@@ -38,6 +36,7 @@ app.use("/checklist", checklistRouter);
 
 app.post("/register", async function (req, res) {
   try {
+    console.log(req.body);
     console.log(1);
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     console.log(2);
@@ -74,7 +73,7 @@ app.post("/login", (request, response) => {
               request.session.loggedin = true;
               request.session.uid = results[0].uid;
               request.session.email = email;
-              response.redirect("/");
+              response.send("로그인이 완료되었습니다.");
             } else {
               response.send("잘못된 비밀번호입니다!");
             }
