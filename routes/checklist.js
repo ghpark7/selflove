@@ -6,7 +6,9 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { content } = req.body;
 
-  const uid = 1;
+  //   const uid = 1;
+  const uid = req.session.uid;
+
   const insertChecklistQuery =
     "INSERT INTO Checklist (isCompl, month, year, content, uid) VALUES (?, ?, ?, ?, ?)";
   const values = [
@@ -26,7 +28,10 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/score", async (req, res) => {
-  const uid = 1;
+  //   const uid = 1;
+  console.log(req.cookies["sessionId"]);
+  const uid = req.cookies["sessionId"].uid;
+
   const selectChecklistQuery =
     "SELECT * FROM Checklist WHERE uid = ? AND month = ? AND year = ?";
   const values = [uid, new Date().getMonth() + 1, new Date().getFullYear()];
@@ -46,7 +51,10 @@ router.get("/score", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const uid = 1;
+  //   const uid = 1;
+
+  const uid = req.session.uid;
+
   const selectChecklistQuery =
     "SELECT * FROM Checklist WHERE uid = ? AND month = ? AND year = ?";
   const values = [uid, new Date().getMonth() + 1, new Date().getFullYear()];
