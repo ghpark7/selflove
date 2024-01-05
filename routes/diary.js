@@ -4,12 +4,29 @@ import { mysqlConnection } from "../mysql.conn.js";
 const router = express.Router();
 
 // 일기 조회
-router.get("/:uid", async (req, res) => {
+router.get("/user/:uid", async (req, res) => {
   const { uid } = req.params;
 
   const selectDiariesQuery =
     "SELECT * FROM Diary WHERE uid = ? ORDER BY createdAt DESC";
   const values = [uid];
+
+  try {
+    const [result] = await mysqlConnection.connection.execute(
+      selectDiariesQuery,
+      values
+    );
+    res.json(result);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+router.get("/:did", async (req, res) => {
+  const { did } = req.params;
+
+  const selectDiariesQuery = "SELECT * FROM Diary WHERE did = ?";
+  const values = [did];
 
   try {
     const [result] = await mysqlConnection.connection.execute(
