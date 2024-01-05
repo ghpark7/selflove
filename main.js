@@ -6,7 +6,10 @@ var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 
-
+/*
+ author: ghpark
+ passport 동작을 위해 추가
+*/
 var passport = require('passport')
     , LocalStrategy = require('passport-local')
     .Strategy;
