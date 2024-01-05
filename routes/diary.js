@@ -7,10 +7,11 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { title, content } = req.body;
 
-  const userId = 1;
+  print(req.session);
+  const uid = req.session.uid;
   const insertDiaryQuery =
     "INSERT INTO Diary (title, content, uid, createdAt) VALUES (?, ?, ?, NOW())";
-  const values = [title, content, userId];
+  const values = [title, content, uid];
 
   try {
     await mysqlConnection.connection.execute(insertDiaryQuery, values);
@@ -22,7 +23,9 @@ router.post("/", async (req, res) => {
 
 // 일기 조회
 router.get("/my", async (req, res) => {
-  const uid = 1; // TODO: 세션 정보를 바탕으로 얻어내도록 변경 필요
+  // const uid = 1; // TODO: 세션 정보를 바탕으로 얻어내도록 변경 필요
+  print(req.session);
+  const uid = req.session.uid;
 
   const selectDiariesQuery =
     "SELECT * FROM Diary WHERE uid = ? ORDER BY createdAt DESC";
